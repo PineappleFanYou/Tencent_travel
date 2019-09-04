@@ -4,11 +4,13 @@
     <Header></Header>
     <!-- <nuxt /> 页面的占位符，类似于router-view -->
     <nuxt />
+    <Footer></Footer>
   </div>
 </template>
 <script>
 // 导入组件
 import Header from '@/components/header.vue'
+import Footer from '@/components/footer.vue'
 export default {
   data() {
     return {
@@ -17,7 +19,8 @@ export default {
   },
   // 注册
   components:{
-    Header
+    Header,
+    Footer
   }
 }
 </script>
