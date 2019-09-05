@@ -15,73 +15,34 @@
                     </span>
                     </el-row>
                    
-                    <el-form :model="loginForm" :rules="rules" ref="loginForm"  class="form">
-                    <!-- 用户名输入框 -->
-                    <el-form-item prop="username" class="form-item">
-                    <el-input v-model="loginForm.username" placeholder="用户名/手机"></el-input>
-                    </el-form-item>
-                    <!-- 密码输入框 -->
-                    <el-form-item prop="password" class="form-item">
-                    <el-input v-model="loginForm.password" placeholder="密码"></el-input>
-                    </el-form-item>
-                    
-                
-                <!-- 忘记密码 -->
-                <p class="form-text">
-                    <nuxt-link to="#">忘记密码</nuxt-link>
-                </p>
-                <!-- 登录按钮 -->
-                <el-button type="primary" class="submit" @click="handleLoginSubmit">登录按钮</el-button>
-                </el-form>
                 <!-- 登录功能组件 -->
-                <!-- <LoginForm v-if="currentTab == 0"/> -->
-
+                <loginForm v-if="current === 0"></loginForm>
                 <!-- 注册功能组件 -->
+                <registerForm v-if="current === 1"></registerForm>
                 <!-- <RegisterForm v-if="currentTab == 1"/> -->
             </div>
         </el-row>
   </div>
 </template>
 <script>
+// 引入注册
+import loginForm from '@/components/user/loginForm.vue'
+import registerForm from '@/components/user/registerForm.vue'
 export default {
+    // 注册
+    components:{
+        loginForm,
+        registerForm
+    },
+
   data() {
       return {
-          loginForm:{
-              username:'',
-              password:''
-          },
-           rules: {
-          username: [
-            { required: true, message: '请输入活动名称', trigger: 'blur' }
-          ],
-          password: [
-            { required: true, message: '请输入活动名称', trigger: 'blur' }
-          ],
-      },
-      current:0
-  }
-},
+          current:0
+      }
+  },
 methods:{
     handleClick(index) {
         this.current = index
-    },
-    // 提交登录
-    handleLoginSubmit() {
-        // 表单的二次验证
-        this.$refs.loginForm.validate(valid=>{
-            if(valid) {
-                // 请求登录接口
-                this.$axios({
-                    url:'/accounts/login',
-                    method: 'post',
-                    data:this.loginForm
-                }).then(res=>{
-                    console.log(res)
-                })
-            }else {
-                console.log('验证失败')
-            }
-        })
     }
 }
 }
@@ -124,20 +85,5 @@ methods:{
             }
         }
 }
-}
-.form {
-    padding:25px;
-}
-.form-item {
-    margin-bottom:20px;
-}
-.form-text {
-    font-size: 12px;
-    color:#409EFF;
-    text-align: right;
-    line-height: 1;
-}
-.submit {
-    width: 100%;
 }
 </style>
