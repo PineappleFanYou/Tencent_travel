@@ -32,6 +32,9 @@ export default {
   */
   plugins: [
     '@/plugins/element-ui',
+    // 配置错误拦截
+    '@/plugins/axios',
+    //配置仓库
     { src: '~/plugins/localStorage.js', ssr: false }
   ],
   /*
