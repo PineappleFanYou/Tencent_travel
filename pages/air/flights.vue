@@ -1,0 +1,111 @@
+<template>
+  <section class="contianer">
+    <el-row type="flex" justify="space-between">
+      <!-- 顶部过滤列表 -->
+      <div class="flights-content">
+        <!-- 过滤条件 -->
+
+        <!-- 航班头部布局 -->
+        <div>
+          <FlightsListHead />
+        </div>
+        <!-- 航班信息列表 -->
+        <div>
+          <!-- data 是用来父组件向子组件传值的，约定好用data,所以那边只能用data -->
+          <FlightsItem v-for="(item,index) in dataList" :key="index" :data="item" />
+          <!-- 分页 -->
+          <!-- size-change：每页条数切换时候触发 -->
+          <!-- current-change：页码切换时候触发 -->
+          <!-- current-page: 当前的页码 -->
+          <!-- page-size: 当前显示的条数 -->
+          <!-- total: 总条数 -->
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="pageIndex"
+            :page-sizes="[5, 10, 15, 20]"
+            :page-size="pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="total"
+          ></el-pagination>
+        </div>
+        <div>
+          <!-- 侧边栏 -->
+        </div>
+      </div>
+      <div class="aside">
+        <!-- 侧边栏组件 -->
+      </div>
+    </el-row>
+  </section>
+</template>
+<script>
+import FlightsListHead from "@/components/air/flightsListHead.vue";
+import FlightsItem from "@/components/air/flightsItem.vue";
+export default {
+  // 注册使用
+  components: {
+    FlightsListHead,
+    FlightsItem
+  },
+  data() {
+    return {
+      // 机票列表返回的总数据，总数据包含四个属性，flights/info/options/total
+      flightsData: {},
+      //当前显示的列表数组
+      dataList: [],
+      //当前的页码
+      pageIndex: 1,
+      //每页的条数
+      pageSize:5,
+      // 总条数，等一下会赋值
+      total:0
+    };
+  },
+  mounted() {
+    // 发送请求航班总数据
+    this.$axios({
+      url: "/airs",
+      // 路由的参数
+      params: this.$route.query
+    }).then(res => {
+    //   console.log(res)
+      // 赋值给航班总数据
+      this.flightsData = res.data;
+      // 赋值给当前显示的列表数组
+      this.dataList = this.flightsData.flights.slice(0,this.pageSize)
+      // 赋值给总条数
+      this.total = this.flightsData.flights.length  
+    });
+  },
+  methods:{
+      // 每页条数切换时触发，val是条数
+       handleSizeChange(val) {
+        // console.log(`每页 ${val} 条`);
+        this.pageSize = val
+        // 如果我们跟新了每页的条数，那么页面也要刷新，也要跟着修改条数
+        this.dataList = this.flightsData.flights.slice(0,val);
+      },
+      // 页码切换时触发， val是点击的页码
+      handleCurrentChange(val) {
+        // console.log(`当前页: ${val}`);
+        this.pageIndex = val 
+        // 我们点击不同的页面的时候，也要刷新页面
+        this.dataList = this.flightsData.flights.slice((this.pageIndex - 1) * this.pageSize,this.pageIndex * this.pageSize)
+      }
+  }
+};
+</script>
+<style lang="less" scoped>
+.contianer {
+  width: 1000px;
+  margin: 20px auto;
+}
+.flights-content {
+  width: 745px;
+  font-size: 14px;
+}
+.aside {
+  width: 240px;
+}
+</style>
