@@ -1,10 +1,10 @@
 <template>
-  <section class="contianer">
+  <section class="contianer" >
     <el-row type="flex" justify="space-between">
       <!-- 顶部过滤列表 -->
       <div class="flights-content">
         <!-- 过滤条件 -->
-
+        <FlightsFilters :data="cacheFlightsData" @setDataList="setDataList"></FlightsFilters>
         <!-- 航班头部布局 -->
         <div>
           <FlightsListHead />
@@ -42,16 +42,27 @@
 <script>
 import FlightsListHead from "@/components/air/flightsListHead.vue";
 import FlightsItem from "@/components/air/flightsItem.vue";
+import FlightsFilters from "@/components/air/flightsFilters.vue";
 export default {
   // 注册使用
   components: {
     FlightsListHead,
-    FlightsItem
+    FlightsItem,
+    FlightsFilters
   },
   data() {
     return {
       // 机票列表返回的总数据，总数据包含四个属性，flights/info/options/total
-      flightsData: {},
+      flightsData: {
+        info:{},
+        options:{}
+      },
+      // 代表是大的数据，初始值和上面的flightsData是一样的，
+      // 这个变量一旦赋值之后不能再被修改
+      cacheFlightsData:{
+        info:{},
+        options:{}
+      },
       //当前显示的列表数组
       dataList: [],
       //当前的页码
@@ -69,9 +80,12 @@ export default {
       // 路由的参数
       params: this.$route.query
     }).then(res => {
-    //   console.log(res)
+      // console.log(res)
       // 赋值给航班总数据
       this.flightsData = res.data;
+      console.log(this.flightsData)
+      // 拷贝一份航班总数据，然后赋值给缓存数据
+      this.cacheFlightsData = { ...res.data }
       // 赋值给当前显示的列表数组
       this.dataList = this.flightsData.flights.slice(0,this.pageSize)
       // 赋值给总条数
@@ -90,6 +104,18 @@ export default {
       handleCurrentChange(val) {
         // console.log(`当前页: ${val}`);
         this.pageIndex = val 
+        // 我们点击不同的页面的时候，也要刷新页面
+        this.dataList = this.flightsData.flights.slice((this.pageIndex - 1) * this.pageSize,this.pageIndex * this.pageSize)
+      },
+
+      // 该方法传递子组件，修改dataList
+      setDataList(arr){
+        // 修改总的航班列表
+        this.flightsData.flights = arr;
+
+        // 回到第一页
+        this.pageIndex = 1;
+        this.total=arr.length;
         // 我们点击不同的页面的时候，也要刷新页面
         this.dataList = this.flightsData.flights.slice((this.pageIndex - 1) * this.pageSize,this.pageIndex * this.pageSize)
       }
