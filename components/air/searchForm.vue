@@ -206,6 +206,14 @@ export default {
         if(!departDate) {
             this.$alert('请选择查询时间','提示');
         }
+
+        // 把本地存储先拿出来
+        const arr = JSON.parse(localStorage.getItem('airs')) || [];
+        arr.push(this.form);
+
+        // 把搜索条件保存到本地
+        localStorage.setItem('airs',JSON.stringify(arr));
+        
         // 跳转到机票列表页
         this.$router.push({
             path:'/air/flights',

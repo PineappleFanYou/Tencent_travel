@@ -54,7 +54,8 @@
                        type="primary" 
                        round 
                        plain 
-                       size="mini">
+                       size="mini"
+                       @click="handleFiltersCancel">
                 撤销
     		</el-button>
         </div>
@@ -125,6 +126,17 @@ export default {
             return e.plane_size === value
           })
           this.$emit('setDataList',arr)
+        },
+
+        // 撤销--所谓的撤销，就是初始化所有的条件
+        handleFiltersCancel() {
+          this.airport = '';
+          this.flightTimes = '';
+          this.company = '';
+          this.airSize = '';
+          this.pageIndex = 1;
+          // 返回全部的数据
+          this.$emit('setDataList',this.data.flights)
         }
     }
 };
