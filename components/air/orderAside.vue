@@ -55,7 +55,8 @@ export default {
     },
     computed:{
         rankTiem() {
-            // 到达时间
+           if(this.data.arr_time){
+                // 到达时间
             const arr = this.data.arr_time.split(":");
             // 出发时间
             const dep = this.data.dep_time.split(":");
@@ -77,6 +78,7 @@ export default {
             // 取莫的分钟数
             const min = dis % 60;
             return `${hours}时${min}分`
+           }
          }
     }
     

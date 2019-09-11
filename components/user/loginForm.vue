@@ -43,7 +43,10 @@ export default {
                      // 如何调用mutations 下的setUserInfo的方法  commit
                      // commit 接受两个参数，第一个mutations 参数是方法名，第二个参数是数据
                      this.$store.commit('user/setUserInfo',res.data)
-                     this.$router.push('/')
+                    //  this.$router.push('/')
+
+                    // 返回上一页
+                    this.$router.back();
                  })
              }else {
                  console.log('验证失败')
