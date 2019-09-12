@@ -200,11 +200,11 @@ export default {
                 },
                 data
             }).then(res=>{
-                // console.log(res)
+                console.log(res)
                 // 解构出订单 id
                 const { id } = res.data.data;
                 this.$router.push({
-                    path:'air/pay',
+                    path:'/air/pay',
                     query:{
                         id
                     }
